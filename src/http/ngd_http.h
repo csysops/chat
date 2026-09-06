@@ -2,6 +2,11 @@
 #define NGD_HTTP_H
 //
 #include "ngd_core.h"
+#include "ngd_pool.h"
+#include "ngd_buf.h"
+#include "ngd_str.h"
+#include "ngd_list.h"
+#include "ngd_file.h"
 //
 #define NGD_HTTP_ROOT_PATH "/WWW"
 #define NGD_HTTP_BUFLEN (1024 * 16) //16kb
@@ -44,7 +49,24 @@ struct ngd_http_t {
     u_char *value_end;
     //
     size_t content_length;
-
-}
-//
+    bool on_keep_alive;
+    bool on_chunk;
+    bool on_content_length;
+    //body
+    bool on_body_file;
+    ngd_file_t file_temp;
+    size_t body_recved;
+    //send
+    ngd_file_t file_send;
+};
+// connection
+void ngd_http_init_conn(ngd_conn_t *c);
+void ngd_http_close_conn(ngd_conn_t *c);
+int ngd_http_handle_conn(ngd_conn_t *c);
+// http
+int ngd_http_parse_reqline(ngd_http_t *http); //(until pos == last) -> undone -> again
+int ngd_http_parse_headers(ngd_http_t *http); //(pos <= last) -> done -> ok
+int ngd_http_parse_body(ngd_http_t *http);
+int ngd_http_build_resp(ngd_http_t *http);
+int ngd_http_send_resp(ngd_http_t *http);
 #endif
