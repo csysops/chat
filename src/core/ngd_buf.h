@@ -6,7 +6,7 @@
 typedef struct {
     u_char *start;
     u_char *pos;
-    u_char *last;    
+    u_char *last;
     u_char *end;
 } ngd_buf_t;
 //
