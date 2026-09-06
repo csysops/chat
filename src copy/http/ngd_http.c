@@ -295,13 +295,13 @@ done:
     ngd_http_close_conn(http);
     return;
 again:
+
     http->state = state;
     return;
 error:
     ngd_http_close_conn(c);
     http->state = state;
     return;
-
 }
 //
 int
